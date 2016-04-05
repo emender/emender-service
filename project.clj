@@ -9,6 +9,10 @@
                    [ring/ring-jetty-adapter "1.3.2"]
                    [hiccup "1.0.4"]]
     :dev-dependencies [[lein-ring "0.8.10"]]
+    :plugins [[lein-ring "0.8.10"]
+              [codox "0.8.11"]
+              [test2junit "1.1.0"]
+              [lein-cloverage "1.0.6"]]
     :main ^:skip-aot emender-service.core
     :ring {:handler emender-service.core/app}
     :profiles {:uberjar {:aot :all}})
