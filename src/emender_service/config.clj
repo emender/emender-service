@@ -10,7 +10,7 @@
 ;      Pavel Tisnovsky
 ;
 
-(ns emeder-service.config)
+(ns emender-service.config)
 
 (require '[clojure.pprint :as pprint])
 
