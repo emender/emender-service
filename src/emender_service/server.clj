@@ -2,10 +2,12 @@
 
 (require '[ring.util.response     :as http-response])
 
+(require '[emender-service.html-renderer :as html-renderer])
+
 (defn render-front-page
     "Create front page."
     [request]
-    (-> (http-response/response "<html><body>xyzzy</body></html>")
+    (-> (http-response/response (html-renderer/render-front-page))
         (http-response/content-type "text/html")))
 
 (defn return-file
@@ -25,7 +27,11 @@
     (println "request URI: " (request :uri))
     (let [uri (request :uri)]
         (condp = uri
-            "/favicon.ico"       (return-file "favicon.ico" "image/x-icon")
-            "/"                  (render-front-page request)
+            "/favicon.ico"         (return-file "favicon.ico"         "image/x-icon")
+            "/emender-service.css" (return-file "emender-service.css" "image/x-icon")
+            "/bootstrap.min.css"   (return-file "bootstrap.min.css"   "text/css")
+            "/emender-service.css" (return-file "emender-service.css" "text/css")
+            "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
+            "/"                    (render-front-page request)
     )))
 
