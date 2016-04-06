@@ -21,17 +21,27 @@
                 (http-response/content-type content-type))
             (println "return-file(): can not access file: " (.getName file)))))
 
+(defn api-call-handler
+    [uri method]
+    nil)
+
+(defn non-api-call-handler
+    [request uri]
+    (condp = uri
+        "/favicon.ico"         (return-file "favicon.ico"         "image/x-icon")
+        "/emender-service.css" (return-file "emender-service.css" "image/x-icon")
+        "/bootstrap.min.css"   (return-file "bootstrap.min.css"   "text/css")
+        "/emender-service.css" (return-file "emender-service.css" "text/css")
+        "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
+        "/"                    (render-front-page request)))
+
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
     (println "request URI: " (request :uri))
-    (let [uri (request :uri)]
-        (condp = uri
-            "/favicon.ico"         (return-file "favicon.ico"         "image/x-icon")
-            "/emender-service.css" (return-file "emender-service.css" "image/x-icon")
-            "/bootstrap.min.css"   (return-file "bootstrap.min.css"   "text/css")
-            "/emender-service.css" (return-file "emender-service.css" "text/css")
-            "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
-            "/"                    (render-front-page request)
-    )))
+    (let [uri    (:uri request)
+          method (:request-method request)]
+         (if (.startsWith uri "/v1")
+             (api-call-handler uri method)
+             (non-api-call-handler request uri))))
 
