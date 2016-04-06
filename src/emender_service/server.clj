@@ -21,9 +21,26 @@
                 (http-response/content-type content-type))
             (println "return-file(): can not access file: " (.getName file)))))
 
+(defn job-start-handler
+    [uri]
+    (println "job started" uri))
+
+(defn job-finished-handler
+    [uri]
+    (println "job finished" uri))
+
+(defn unknown-call-handler
+    [uri]
+    (println "unknown API call" uri))
+
+; todo API call prefix -> config
+
 (defn api-call-handler
     [uri method]
-    nil)
+    (condp = (subs uri (.length "/v1"))
+        "/job-start"    (job-start-handler    uri)
+        "/job-finished" (job-finished-handler uri)
+                           (unknown-call-handler uri)))
 
 (defn non-api-call-handler
     [request uri]
@@ -34,6 +51,8 @@
         "/emender-service.css" (return-file "emender-service.css" "text/css")
         "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
         "/"                    (render-front-page request)))
+
+; todo API call prefix -> config
 
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
