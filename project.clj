@@ -8,6 +8,8 @@
                    [clojure-ini "0.0.1"]
                    [ring/ring-core "1.3.2"]
                    [ring/ring-jetty-adapter "1.3.2"]
+                   [org.clojure/data.json "0.2.5"]
+                   [clj-http "2.0.0"]
                    [hiccup "1.0.4"]]
     :dev-dependencies [[lein-ring "0.8.10"]]
     :plugins [[lein-ring "0.8.10"]
