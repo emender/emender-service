@@ -1,0 +1,15 @@
+body { padding-top: 70px; }
+
+  /* Extra small devices (phones, less than 768px) */
+  @media (max-width: 1200px) {
+    body { padding-top: 70px; }
+  }
+
+  @media (max-width: 992px) {
+    body { padding-top: 160px; }
+  }
+
+  @media (max-width: 768px) {
+    body { padding-top: 240px; }
+  }
+
