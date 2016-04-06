@@ -26,11 +26,25 @@
     [string]
     (java.lang.Float/parseFloat string))
 
+(defn parse-boolean
+    "Parse the given string as a boolean value."
+    [string]
+    (or (= string "true")
+        (= string "True")))
+
+(defn update-configuration
+    "Update selected items in the configuration structure."
+    [configuration]
+    (-> configuration
+        (update-in [:jenkins :port] parse-int)
+        (update-in [:result-cache :pretty-print] parse-boolean)
+        (update-in [:config :verbose] parse-boolean)))
+
 (defn load-configuration
     "Load configuration from the provided INI file."
     [ini-file-name]
     (-> (clojure-ini/read-ini ini-file-name :keywordize? true)
-    ))
+        update-configuration))
 
 (defn print-configuration
     "Print actual configuration to the output."
