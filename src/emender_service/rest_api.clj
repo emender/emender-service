@@ -15,26 +15,45 @@
 (require '[ring.util.response     :as http-response])
 (require '[clojure.data.json      :as json])
 
+(require '[emender-service.file-utils :as file-utils])
+
+(defn read-request-body
+    [request]
+    (file-utils/slurp- (:body request)))
+
+(defn body->job-name
+    [body]
+    (let [data (json/read-str body)]
+        (get data "name")))
+
+(defn send-response
+    [response]
+    (-> (http-response/response (json/write-str response))
+        (http-response/content-type "application/json")))
+
 (defn info-handler
     [request hostname]
     (let [response {:toasterNotifications [(str "info|Api response|<strong>Emender Service</strong> api v1 on</br>" hostname)]
                     :configuration (:configuration request)}]
-        (-> (http-response/response (json/write-str response))
-            (http-response/content-type "application/json"))))
+        (send-response response)))
 
 (defn unknown-call-handler
     [uri method]
-    (let [response {:error "Unknown API call"
+    (let [response {:status :error
+                    :error "Unknown API call"
                     :uri uri
                     :method method}]
-        (-> (http-response/response (json/write-str response))
-            (http-response/content-type "application/json"))))
+        (send-response response)))
 
-(defn job-start-handler
+(defn job-started-handler
     [request]
-    (println "job started"))
+    (let [job-name (-> (read-request-body request) body->job-name)]
+        (println "job started" job-name)
+        (send-response {:status :ok})))
 
 (defn job-finished-handler
     [request]
-    (println "job finished"))
+    (let [job-name (-> (read-request-body request) body->job-name)]
+        (println "job finished" job-name)
+        (send-response {:status :ok})))
 
