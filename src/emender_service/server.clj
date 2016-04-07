@@ -13,10 +13,12 @@
 (ns emender-service.server)
 
 (require '[ring.util.response     :as http-response])
+(require '[clojure.pprint         :as pprint])
 (require '[clojure.data.json      :as json])
 
 (require '[emender-service.html-renderer :as html-renderer])
 (require '[emender-service.results       :as results])
+(require '[emender-service.config        :as config])
 (require '[emender-service.rest-api      :as rest-api])
 
 (defn render-front-page
@@ -40,14 +42,11 @@
     []
     (.. java.net.InetAddress getLocalHost getHostName))
 
-; todo API call prefix -> config
-
 (defn api-call-handler
     [request uri method]
-    (println method)
-    (condp = [method (subs uri (.length "/v1"))]
+    (condp = [method (subs uri (count (config/get-api-prefix request)))]
         [:get  "/info"]         (rest-api/info-handler request (get-hostname))
-        [:post "/job-start"]    (rest-api/job-start-handler request)
+        [:post "/job-started"]  (rest-api/job-started-handler request)
         [:post "/job-finished"] (rest-api/job-finished-handler request)
                                 (rest-api/unknown-call-handler uri method)))
 
@@ -61,16 +60,14 @@
         "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
         "/"                    (render-front-page request)))
 
-; todo API call prefix -> config
-
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
-    (println "request URI: " (:uri request))
-    (println (:configuration request))
+    (if (config/verbose? request)
+        (pprint/pprint request))
     (let [uri    (:uri request)
           method (:request-method request)]
-         (if (.startsWith uri "/v1")
+         (if (.startsWith uri (config/get-api-prefix request))
              (api-call-handler request uri method)
              (non-api-call-handler request uri))))
 
