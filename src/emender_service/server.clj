@@ -1,8 +1,21 @@
+;
+;  (C) Copyright 2016  Pavel Tisnovsky
+;
+;  All rights reserved. This program and the accompanying materials
+;  are made available under the terms of the Eclipse Public License v1.0
+;  which accompanies this distribution, and is available at
+;  http://www.eclipse.org/legal/epl-v10.html
+;
+;  Contributors:
+;      Pavel Tisnovsky
+;
+
 (ns emender-service.server)
 
 (require '[ring.util.response     :as http-response])
 
 (require '[emender-service.html-renderer :as html-renderer])
+(require '[emender-service.results       :as results])
 
 (defn render-front-page
     "Create front page."
@@ -57,7 +70,8 @@
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
-    (println "request URI: " (request :uri))
+    (println "request URI: " (:uri request))
+    (println (:configuration request))
     (let [uri    (:uri request)
           method (:request-method request)]
          (if (.startsWith uri "/v1")
