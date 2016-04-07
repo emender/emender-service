@@ -51,3 +51,11 @@
     [configuration]
     (pprint/pprint configuration))
 
+(defn get-api-prefix
+    [request]
+    (-> request :configuration :api :prefix))
+
+(defn verbose?
+    [request]
+    (-> request :configuration :config :verbose))
+
