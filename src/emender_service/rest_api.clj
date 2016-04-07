@@ -30,3 +30,11 @@
         (-> (http-response/response (json/write-str response))
             (http-response/content-type "application/json"))))
 
+(defn job-start-handler
+    [request]
+    (println "job started"))
+
+(defn job-finished-handler
+    [request]
+    (println "job finished"))
+

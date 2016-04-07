@@ -13,9 +13,11 @@
 (ns emender-service.server)
 
 (require '[ring.util.response     :as http-response])
+(require '[clojure.data.json      :as json])
 
 (require '[emender-service.html-renderer :as html-renderer])
 (require '[emender-service.results       :as results])
+(require '[emender-service.rest-api      :as rest-api])
 
 (defn render-front-page
     "Create front page."
@@ -34,26 +36,20 @@
                 (http-response/content-type content-type))
             (println "return-file(): can not access file: " (.getName file)))))
 
-(defn job-start-handler
-    [uri]
-    (println "job started" uri))
-
-(defn job-finished-handler
-    [uri]
-    (println "job finished" uri))
-
-(defn unknown-call-handler
-    [uri]
-    (println "unknown API call" uri))
+(defn get-hostname
+    []
+    (.. java.net.InetAddress getLocalHost getHostName))
 
 ; todo API call prefix -> config
 
 (defn api-call-handler
-    [uri method]
-    (condp = (subs uri (.length "/v1"))
-        "/job-start"    (job-start-handler    uri)
-        "/job-finished" (job-finished-handler uri)
-                           (unknown-call-handler uri)))
+    [request uri method]
+    (println method)
+    (condp = [method (subs uri (.length "/v1"))]
+        [:get  "/info"]         (rest-api/info-handler request (get-hostname))
+        [:post "/job-start"]    (rest-api/job-start-handler request)
+        [:post "/job-finished"] (rest-api/job-finished-handler request)
+                                (rest-api/unknown-call-handler uri method)))
 
 (defn non-api-call-handler
     [request uri]
@@ -75,6 +71,6 @@
     (let [uri    (:uri request)
           method (:request-method request)]
          (if (.startsWith uri "/v1")
-             (api-call-handler uri method)
+             (api-call-handler request uri method)
              (non-api-call-handler request uri))))
 
