@@ -13,6 +13,7 @@
 (ns emender-service.rest-api)
 
 (require '[ring.util.response     :as http-response])
+(require '[clojure.pprint         :as pprint])
 (require '[clojure.data.json      :as json])
 
 (require '[emender-service.file-utils :as file-utils])
@@ -21,10 +22,19 @@
     [request]
     (file-utils/slurp- (:body request)))
 
-(defn body->job-name
+(defn body->results
     [body]
-    (let [data (json/read-str body)]
-        (get data "name")))
+    (json/read-str body))
+
+(defn read-job-name-from-uri
+    [uri]
+    (-> uri
+        (subs (inc (.lastIndexOf uri "/")))
+        (clojure.string/replace "+" " ")))
+
+(defn read-job-name-from-request
+    [request]
+    (read-job-name-from-uri (:uri request)))
 
 (defn send-response
     [response]
@@ -47,13 +57,22 @@
 
 (defn job-started-handler
     [request]
-    (let [job-name (-> (read-request-body request) body->job-name)]
+    (let [job-name (read-job-name-from-request request)]
         (println "job started" job-name)
         (send-response {:status :ok})))
 
 (defn job-finished-handler
     [request]
-    (let [job-name (-> (read-request-body request) body->job-name)]
+    (let [job-name (read-job-name-from-request request)]
         (println "job finished" job-name)
+        (send-response {:status :ok})))
+
+(defn job-results-handler
+    [request]
+    (let [job-name (read-job-name-from-request request)
+          results  (-> (read-request-body request) body->results)]
+        (println "job name" job-name)
+        (println "results:" results)
+        ;(pprint/pprint results)
         (send-response {:status :ok})))
 
