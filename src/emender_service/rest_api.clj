@@ -78,3 +78,11 @@
         ;(pprint/pprint results)
         (send-response {:status :ok})))
 
+(defn get-job-list-handler
+    [request]
+    (let [res @results/results
+          names (keys res)]
+          (if names
+              (send-response names)
+              (send-response []))))
+
