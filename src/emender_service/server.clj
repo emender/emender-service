@@ -42,12 +42,18 @@
     []
     (.. java.net.InetAddress getLocalHost getHostName))
 
+(defn get-api-command
+    [request uri]
+    (if uri
+        (re-find #"/[^/]*" (subs uri (count (config/get-api-prefix request))))))
+
 (defn api-call-handler
     [request uri method]
-    (condp = [method (subs uri (count (config/get-api-prefix request)))]
+    (condp = [method (get-api-command request uri)]
         [:get  "/info"]         (rest-api/info-handler request (get-hostname))
-        [:post "/job-started"]  (rest-api/job-started-handler request)
+        [:post "/job-started"]  (rest-api/job-started-handler  request)
         [:post "/job-finished"] (rest-api/job-finished-handler request)
+        [:post "/job-results"]  (rest-api/job-results-handler  request)
                                 (rest-api/unknown-call-handler uri method)))
 
 (defn non-api-call-handler
