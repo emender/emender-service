@@ -5,3 +5,10 @@
 (deftest a-test
   (testing "FIXME, I fail."
     (is (= 0 1))))
+;(get-api-command nil)
+;(get-api-command "/v1")
+;(get-api-command "/v1/")
+;(get-api-command "/v1/job-started")
+;(get-api-command "/v1/job-started/")
+;(get-api-command "/v1/job-finished/jobNameName")
+;
