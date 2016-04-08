@@ -12,11 +12,12 @@
 
 (ns emender-service.rest-api)
 
-(require '[ring.util.response     :as http-response])
-(require '[clojure.pprint         :as pprint])
-(require '[clojure.data.json      :as json])
+(require '[ring.util.response         :as http-response])
+(require '[clojure.pprint             :as pprint])
+(require '[clojure.data.json          :as json])
 
 (require '[emender-service.file-utils :as file-utils])
+(require '[emender-service.results    :as results])
 
 (defn read-request-body
     [request]
@@ -73,6 +74,7 @@
           results  (-> (read-request-body request) body->results)]
         (println "job name" job-name)
         (println "results:" results)
+        (results/add-new-results job-name results)
         ;(pprint/pprint results)
         (send-response {:status :ok})))
 
