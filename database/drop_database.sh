@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DATABASE=emender_service.db
+DATABASE=emender-service.db
 
 cat drop_database.sql | sqlite3 ../${DATABASE}
 
