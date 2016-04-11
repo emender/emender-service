@@ -11,24 +11,12 @@
 ;
 
 (ns emender-service.db-interface
-    "Namespace that contains configuration of all JDBC sources.")
+    "Namespace that contains interface to the database.")
 
 (require '[clojure.java.jdbc       :as jdbc])
 
-(require '[emender-service.db-spec :as db-spec])
-
-
-
-(def date-format
-    (new java.text.SimpleDateFormat "yyyy-MM-dd HH:mm:ss"))
-
-(defn format-date
-    [date]
-    (.format date-format date))
-
-(defn format-current-date
-    []
-    (format-date (new java.util.Date)))
+(require '[emender-service.db-spec     :as db-spec])
+(require '[emender-service.format-date :as format-date])
 
 (defn record-request-log
     [uri ipaddress datetime params useragent]
@@ -66,25 +54,25 @@
     [request]
     (let [uri       (:uri request)
           ipaddress (:remote-addr request)
-          datetime  (format-current-date)
+          datetime  (format-date/format-current-date)
           params    (:params request)
           useragent ((:headers request) "user-agent")]
           (record-request-log uri ipaddress datetime params useragent)))
 
 (defn log-job-started
     [job-name]
-    (record-job-event job-name (format-current-date) "started"))
+    (record-job-event job-name (format-date/format-current-date) "started"))
 
 (defn log-job-finished
     [job-name]
-    (record-job-event job-name (format-current-date) "finished"))
+    (record-job-event job-name (format-date/format-current-date) "finished"))
 
 (defn log-job-results
     [job-name results]
-    (record-job-event job-name (format-current-date) "results")
-    (record-job-results job-name (format-current-date) results))
+    (record-job-event job-name (format-date/format-current-date) "results")
+    (record-job-results job-name (format-date/format-current-date) results))
 
 (defn log-error
     [message stacktrace]
-    (record-error (format-current-date message stacktrace)))
+    (record-error (format-date/format-current-date message stacktrace)))
 
