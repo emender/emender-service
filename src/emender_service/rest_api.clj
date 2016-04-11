@@ -12,12 +12,13 @@
 
 (ns emender-service.rest-api)
 
-(require '[ring.util.response         :as http-response])
-(require '[clojure.pprint             :as pprint])
-(require '[clojure.data.json          :as json])
+(require '[ring.util.response           :as http-response])
+(require '[clojure.pprint               :as pprint])
+(require '[clojure.data.json            :as json])
 
-(require '[emender-service.file-utils :as file-utils])
-(require '[emender-service.results    :as results])
+(require '[emender-service.file-utils   :as file-utils])
+(require '[emender-service.results      :as results])
+(require '[emender-service.db-interface :as db-interface])
 
 (defn read-request-body
     [request]
@@ -59,12 +60,14 @@
 (defn job-started-handler
     [request]
     (let [job-name (read-job-name-from-request request)]
+        (db-interface/log-job-started job-name)
         (println "job started" job-name)
         (send-response {:status :ok})))
 
 (defn job-finished-handler
     [request]
     (let [job-name (read-job-name-from-request request)]
+        (db-interface/log-job-finished job-name)
         (println "job finished" job-name)
         (send-response {:status :ok})))
 
@@ -72,6 +75,7 @@
     [request]
     (let [job-name (read-job-name-from-request request)
           results  (-> (read-request-body request) body->results)]
+        (db-interface/log-job-results job-name results)
         (println "job name" job-name)
         (println "results:" results)
         (results/add-new-results job-name results)
