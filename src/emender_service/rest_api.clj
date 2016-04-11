@@ -28,6 +28,10 @@
     [body]
     (json/read-str body))
 
+(defn body->test-info
+    [body]
+    (json/read-str body))
+
 (defn read-job-name-from-uri
     [uri]
     (-> uri
@@ -89,4 +93,12 @@
           (if names
               (send-response names)
               (send-response []))))
+
+(defn run-test-handler
+    [request]
+    (let [job-name  (read-job-name-from-request request)
+          test-info (-> (read-request-body request) body->test-info)]
+        (println "job name " job-name)
+        (println "test info" test-info)
+        (send-response {:status :ok})))
 

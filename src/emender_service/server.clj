@@ -57,6 +57,7 @@
         [:post "/job-started"]  (rest-api/job-started-handler  request)
         [:post "/job-finished"] (rest-api/job-finished-handler request)
         [:post "/job-results"]  (rest-api/job-results-handler  request)
+        [:post "/run-test"]     (rest-api/run-test-handler     request)
                                 (rest-api/unknown-call-handler uri method)))
 
 (defn non-api-call-handler
