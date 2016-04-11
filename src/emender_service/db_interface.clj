@@ -54,6 +54,14 @@
         (catch Exception e
             (println e))))
 
+(defn record-error
+    [datetime message stacktrace]
+    (try
+        (jdbc/insert! db-spec/emender-service-db
+                      :errors {:datetime datetime :message message :stacktrace stacktrace})
+        (catch Exception e
+            (println e))))
+
 (defn log-request-information
     [request]
     (let [uri       (:uri request)
@@ -75,4 +83,8 @@
     [job-name results]
     (record-job-event job-name (format-current-date) "results")
     (record-job-results job-name (format-current-date) results))
+
+(defn log-error
+    [message stacktrace]
+    (record-error (format-current-date message stacktrace)))
 
