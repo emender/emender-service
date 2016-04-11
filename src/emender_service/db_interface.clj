@@ -54,3 +54,25 @@
         (catch Exception e
             (println e))))
 
+(defn log-request-information
+    [request]
+    (let [uri       (:uri request)
+          ipaddress (:remote-addr request)
+          datetime  (format-current-date)
+          params    (:params request)
+          useragent ((:headers request) "user-agent")]
+          (record-request-log uri ipaddress datetime params useragent)))
+
+(defn log-job-started
+    [job-name]
+    (record-job-event job-name (format-current-date) "started"))
+
+(defn log-job-finished
+    [job-name]
+    (record-job-event job-name (format-current-date) "finished"))
+
+(defn log-job-results
+    [job-name results]
+    (record-job-event job-name (format-current-date) "results")
+    (record-job-results job-name (format-current-date) results))
+
