@@ -20,6 +20,7 @@
 (require '[emender-service.results       :as results])
 (require '[emender-service.config        :as config])
 (require '[emender-service.rest-api      :as rest-api])
+(require '[emender-service.db-interface  :as db-interface])
 
 (defn render-front-page
     "Create front page."
@@ -71,6 +72,7 @@
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
     [request]
+    (db-interface/log-request-information request)
     (if (config/verbose? request)
         (pprint/pprint request))
     (let [uri    (:uri request)
