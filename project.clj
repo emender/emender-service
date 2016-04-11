@@ -12,6 +12,7 @@
                    [ring/ring-jetty-adapter "1.3.2"]
                    [org.clojure/data.json "0.2.5"]
                    [clj-http "2.0.0"]
+                   [clj-jgit "0.8.0"]
                    [hiccup "1.0.4"]
                    [irclj "0.5.0-alpha4"]]
     :dev-dependencies [[lein-ring "0.8.10"]]
