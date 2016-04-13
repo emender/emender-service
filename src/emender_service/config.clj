@@ -55,6 +55,14 @@
     [request]
     (-> request :configuration :api :prefix))
 
+(defn path-to-emender
+    [request]
+    (-> request :configuration :emender :path))
+
+(defn path-to-tests
+    [request]
+    (-> request :configuration :emender :tests))
+
 (defn verbose?
     [request]
     (-> request :configuration :config :verbose))
