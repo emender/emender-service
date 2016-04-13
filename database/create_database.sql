@@ -18,6 +18,8 @@ create table results (
     id          integer primary key asc,
     datetime    text,
     job         text,
+    url         text,
+    branch      text,
     results     text
 );
 
@@ -26,5 +28,15 @@ create table errors (
     datetime    text,
     message     text,
     stacktrace  text
+);
+
+create table log (
+    id          integer primary key asc,
+    datetime    text,
+    job         text,
+    url         text,
+    branch      text,
+    operation   text,
+    message     text
 );
 
