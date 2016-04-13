@@ -1,0 +1,41 @@
+rm results.*
+exec > $3/results.log
+exec 2>&1
+
+PATH_TO_EMENDER=$1
+PATH_TO_TESTS=$2
+BOOK_DIRECTORY=$3
+
+shift
+shift
+shift
+
+echo "Called with parameters:"
+echo "  path to Emender  ${PATH_TO_EMENDER}"
+echo "  path to tests    ${PATH_TO_TESTS}"
+echo "  book directory   ${BOOK_DIRECTORY}"
+echo "  tests            $@"
+
+echo
+echo "Temporary work directory is:   ${BOOK_DIRECTORY}"
+pushd ${BOOK_DIRECTORY}
+echo "Full path to work directory:   `pwd`"
+
+echo
+echo "Short log:"
+git log --pretty=format:"%h %ar by %aN: %s" --reverse -n 10
+
+echo
+echo
+echo "Running Emender"
+
+${PATH_TO_EMENDER}/emend $@ -o results.xml -o results.junit -o results.txt -o results.html -o results.summary -o results.json
+echo $?
+
+popd
+
+echo
+echo "Done, have a nice day!"
+echo
+echo
+
