@@ -35,10 +35,10 @@
             (println e))))
 
 (defn record-job-results
-    [job-name datetime results]
+    [job-name repo-url branch datetime results]
     (try
         (jdbc/insert! db-spec/emender-service-db
-                      :results {:job job-name :datetime datetime :results results})
+                      :results {:job job-name :datetime datetime :url repo-url :branch branch :results results})
         (catch Exception e
             (println e))))
 
@@ -69,8 +69,9 @@
 
 (defn log-job-results
     ([job-name repo-url branch results]
-     (record-job-event job-name (format-date/format-current-date) "results")
-     (record-job-results job-name (format-date/format-current-date) results))
+     (let [formatted-date (format-date/format-current-date)]
+         (record-job-event job-name formatted-date "results")
+         (record-job-results job-name repo-url branch formatted-date results)))
     ([job-name results]
      (log-job-results job-name nil nil results)))
 
