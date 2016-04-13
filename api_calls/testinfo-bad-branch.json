@@ -1,0 +1,6 @@
+{
+    "repository": {
+        "url" : "git@gitlab.cee.redhat.com:red-hat-enterprise-linux-documentation/doc-Anaconda_Customization_Guide.git",
+        "branch" : "bad-branch"
+    }
+}
