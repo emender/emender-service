@@ -69,3 +69,7 @@
           file2 (new java.io.File filename2)]
           (.renameTo file1 file2)))
 
+(defn >abs-path
+    [file-or-dir]
+    (.getAbsolutePath (new java.io.File file-or-dir)))
+
