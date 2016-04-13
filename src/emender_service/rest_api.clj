@@ -19,6 +19,9 @@
 (require '[emender-service.file-utils   :as file-utils])
 (require '[emender-service.results      :as results])
 (require '[emender-service.db-interface :as db-interface])
+(require '[emender-service.git-utils    :as git-utils])
+(require '[emender-service.config       :as config])
+(require '[emender-service.exec         :as exec])
 
 (defn read-request-body
     [request]
@@ -30,7 +33,7 @@
 
 (defn body->test-info
     [body]
-    (json/read-str body))
+    (json/read-str body :key-fn clojure.core/keyword))
 
 (defn read-job-name-from-uri
     [uri]
@@ -55,6 +58,7 @@
 
 (defn unknown-call-handler
     [uri method]
+    (db-interface/log-error "Unknown API call" (str "URI: " uri "  method: " method))
     (let [response {:status :error
                     :error "Unknown API call"
                     :uri uri
@@ -94,11 +98,43 @@
               (send-response names)
               (send-response []))))
 
+(defn repo-clone-failed
+    [clone-results job-name repo-url branch]
+    (let [message (str "Problem cloning repository '" repo-url "' and/or checkout branch '" branch "'")]
+        (println message)
+        (db-interface/log-error job-name repo-url branch message (:message clone-results)))
+    (send-response {:status :repo-clone-failed}))
+
+(defn create-tests+paths
+    [path-to-tests tests]
+    (map #(str path-to-tests "/" % ".lua") tests))
+
+(defn run-emend
+    [path-to-emender path-to-tests tests book-directory]
+    (println "Starting Emend against the book directory" book-directory)
+    (let [tests+paths (create-tests+paths path-to-tests tests)]
+        (apply exec/exec "scripts/start_proceed" path-to-emender path-to-tests book-directory tests+paths))
+    (send-response {:status :ok}))
+
 (defn run-test-handler
     [request]
-    (let [job-name  (read-job-name-from-request request)
-          test-info (-> (read-request-body request) body->test-info)]
+    (let [job-name      (read-job-name-from-request request)
+          path-to-emend (file-utils/>abs-path (config/path-to-emender request))
+          path-to-tests (file-utils/>abs-path (config/path-to-tests request))
+          test-info     (-> (read-request-body request) body->test-info)
+          repo-url      (-> test-info :repository :url)
+          branch        (-> test-info :repository :branch)
+          tests         (-> test-info :tests)]
         (println "job name " job-name)
-        (println "test info" test-info)
-        (send-response {:status :ok})))
+        (println "test dir " path-to-tests)
+        (println "repo URL " repo-url)
+        (println "branch   " branch)
+        (println "Emender  " path-to-emend)
+        (println "tests    " tests)
+        (let [;clone-results {:directory (new java.io.File "/tmp/emender-service-1460557400756/")}]
+              clone-results (git-utils/clone-remote-repository repo-url branch)]
+             (if (:directory clone-results)
+                 (run-emend path-to-emend path-to-tests tests
+                            (.getAbsolutePath (:directory clone-results)))
+                 (repo-clone-failed (:message clone-results) job-name repo-url branch)))))
 
