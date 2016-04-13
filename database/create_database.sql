@@ -26,6 +26,9 @@ create table results (
 create table errors (
     id          integer primary key asc,
     datetime    text,
+    job         text,
+    url         text,
+    branch      text,
     message     text,
     stacktrace  text
 );
