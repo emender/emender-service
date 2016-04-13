@@ -68,9 +68,11 @@
     (record-job-event job-name (format-date/format-current-date) "finished"))
 
 (defn log-job-results
-    [job-name results]
-    (record-job-event job-name (format-date/format-current-date) "results")
-    (record-job-results job-name (format-date/format-current-date) results))
+    ([job-name repo-url branch results]
+     (record-job-event job-name (format-date/format-current-date) "results")
+     (record-job-results job-name (format-date/format-current-date) results))
+    ([job-name results]
+     (log-job-results job-name nil nil results)))
 
 (defn log-error
     [message stacktrace]
