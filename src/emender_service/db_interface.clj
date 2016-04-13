@@ -27,10 +27,10 @@
             (println e))))
 
 (defn record-job-event
-    [job-name datetime operation]
+    [job-name repo-url branch datetime operation]
     (try
         (jdbc/insert! db-spec/emender-service-db
-                      :jobs {:job job-name :datetime datetime :operation operation})
+                      :jobs {:job job-name :url repo-url :branch branch :datetime datetime :operation operation})
         (catch Exception e
             (println e))))
 
@@ -43,10 +43,10 @@
             (println e))))
 
 (defn record-error
-    [datetime message stacktrace]
+    [job-name repo-url branch datetime message stacktrace]
     (try
         (jdbc/insert! db-spec/emender-service-db
-                      :errors {:datetime datetime :message message :stacktrace stacktrace})
+                      :errors {:job job-name :url repo-url :branch branch :datetime datetime :message message :stacktrace stacktrace})
         (catch Exception e
             (println e))))
 
@@ -60,22 +60,28 @@
           (record-request-log uri ipaddress datetime params useragent)))
 
 (defn log-job-started
-    [job-name]
-    (record-job-event job-name (format-date/format-current-date) "started"))
+    ([job-name repo-url branch]
+     (record-job-event job-name repo-url branch (format-date/format-current-date) "started"))
+    ([job-name]
+     (log-job-started job-name nil nil)))
 
 (defn log-job-finished
-    [job-name]
-    (record-job-event job-name (format-date/format-current-date) "finished"))
+    ([job-name repo-url branch]
+     (record-job-event job-name repo-url branch (format-date/format-current-date) "finished"))
+    ([job-name]
+     (log-job-finished job-name nil nil)))
 
 (defn log-job-results
     ([job-name repo-url branch results]
      (let [formatted-date (format-date/format-current-date)]
-         (record-job-event job-name formatted-date "results")
+         (record-job-event job-name repo-url branch formatted-date "results")
          (record-job-results job-name repo-url branch formatted-date results)))
     ([job-name results]
      (log-job-results job-name nil nil results)))
 
 (defn log-error
-    [message stacktrace]
-    (record-error (format-date/format-current-date message stacktrace)))
+    ([job-name repo-url branch message stacktrace]
+     (record-error job-name repo-url branch (format-date/format-current-date) message stacktrace))
+    ([message stacktrace]
+     (log-error nil nil nil message stacktrace)))
 
