@@ -2,6 +2,8 @@ create table jobs (
     id          integer primary key asc,
     datetime    text,
     job         text,
+    url         text,
+    branch      text,
     operation   text
 );
 
