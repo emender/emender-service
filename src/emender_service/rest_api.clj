@@ -90,13 +90,24 @@
         ;(pprint/pprint results)
         (send-response {:status :ok})))
 
-(defn get-job-list-handler
+(defn get-job-list-handler-
     [request]
     (let [res @results/results
           names (keys res)]
           (if names
               (send-response names)
               (send-response []))))
+
+(defn get-job-list-handler
+    [request]
+    (let [job-list (db-interface/read-job-list)]
+        (if job-list
+            (send-response job-list)
+            (send-response []))))
+
+(defn get-job-info-handler
+    [request]
+)
 
 (defn repo-clone-failed
     [clone-results job-name repo-url branch]
@@ -109,12 +120,28 @@
     [path-to-tests tests]
     (map #(str path-to-tests "/" % ".lua") tests))
 
+(defn process-results
+    [job-name results]
+        (db-interface/log-job-results job-name results)
+        (println "job name" job-name)
+        (println "results:" results)
+        ;(results/add-new-results job-name results)
+        ;(pprint/pprint results)
+        (send-response {:status :ok
+                        :results results}))
+
 (defn run-emend
-    [path-to-emender path-to-tests tests book-directory]
+    [job-name path-to-emender path-to-tests tests book-directory]
     (println "Starting Emend against the book directory" book-directory)
     (let [tests+paths (create-tests+paths path-to-tests tests)]
         (apply exec/exec "scripts/start_proceed" path-to-emender path-to-tests book-directory tests+paths))
-    (send-response {:status :ok}))
+        (try
+            (let [results (-> (str book-directory "/results.json") slurp json/read-str)]
+                (if results
+                    (process-results job-name results)
+                    (send-response {:status :reading-job-result-failed})))
+            (catch Exception e
+                (send-response {:status :emender-job-failed}))))
 
 (defn run-test-handler
     [request]
@@ -131,10 +158,10 @@
         (println "branch   " branch)
         (println "Emender  " path-to-emend)
         (println "tests    " tests)
-        (let [;clone-results {:directory (new java.io.File "/tmp/emender-service-1460557400756/")}]
-              clone-results (git-utils/clone-remote-repository repo-url branch)]
+        (let [clone-results {:directory (new java.io.File "/tmp/emender-service-1460560704093/")}]
+              ;clone-results (git-utils/clone-remote-repository repo-url branch)]
              (if (:directory clone-results)
-                 (run-emend path-to-emend path-to-tests tests
+                 (run-emend job-name path-to-emend path-to-tests tests
                             (.getAbsolutePath (:directory clone-results)))
                  (repo-clone-failed (:message clone-results) job-name repo-url branch)))))
 
