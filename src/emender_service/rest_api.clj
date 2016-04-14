@@ -41,9 +41,19 @@
         (subs (inc (.lastIndexOf uri "/")))
         (clojure.string/replace "+" " ")))
 
+(defn read-job-id-from-uri
+    [uri]
+    (-> uri
+        (subs (inc (.lastIndexOf uri "/")))
+        Integer/parseInt))
+
 (defn read-job-name-from-request
     [request]
     (read-job-name-from-uri (:uri request)))
+
+(defn read-job-id-from-request
+    [request]
+    (read-job-id-from-uri (:uri request)))
 
 (defn send-response
     [response]
@@ -134,7 +144,13 @@
 
 (defn get-job-info-handler
     [request]
-)
+    (try
+        (let [job-id (read-job-id-from-request request)]
+            (send-response (db-interface/read-job-info job-id)))
+        (catch Exception e
+            (send-response {:status :error
+                            :error "Bad job ID"
+                            :uri (:uri request)}))))
 
 (defn repo-clone-failed
     [clone-results job-name repo-url branch]
