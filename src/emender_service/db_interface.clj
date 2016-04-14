@@ -26,11 +26,11 @@
         (catch Exception e
             (println e))))
 
-(defn record-job-event
+(defn record-job-operation-event
     [job-name repo-url branch datetime operation]
     (try
         (jdbc/insert! db-spec/emender-service-db
-                      :jobs {:job job-name :url repo-url :branch branch :datetime datetime :operation operation})
+                      :job_operations {:job job-name :url repo-url :branch branch :datetime datetime :operation operation})
         (catch Exception e
             (println e))))
 
@@ -47,6 +47,15 @@
     (try
         (jdbc/query db-spec/emender-service-db
                     ["select id, job from results order by id,job"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-book-list
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select distinct job from results"])
         (catch Exception e
             (println e)
             [])))
@@ -70,20 +79,20 @@
 
 (defn log-job-started
     ([job-name repo-url branch]
-     (record-job-event job-name repo-url branch (format-date/format-current-date) "started"))
+     (record-job-operation-event job-name repo-url branch (format-date/format-current-date) "started"))
     ([job-name]
      (log-job-started job-name nil nil)))
 
 (defn log-job-finished
     ([job-name repo-url branch]
-     (record-job-event job-name repo-url branch (format-date/format-current-date) "finished"))
+     (record-job-operation-event job-name repo-url branch (format-date/format-current-date) "finished"))
     ([job-name]
      (log-job-finished job-name nil nil)))
 
 (defn log-job-results
     ([job-name repo-url branch results]
      (let [formatted-date (format-date/format-current-date)]
-         (record-job-event job-name repo-url branch formatted-date "results")
+         (record-job-operation-event job-name repo-url branch formatted-date "results")
          (record-job-results job-name repo-url branch formatted-date results)))
     ([job-name results]
      (log-job-results job-name nil nil results)))
