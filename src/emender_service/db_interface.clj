@@ -42,6 +42,15 @@
         (catch Exception e
             (println e))))
 
+(defn read-job-list
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select id, job from results order by id,job"])
+        (catch Exception e
+            (println e)
+            [])))
+
 (defn record-error
     [job-name repo-url branch datetime message stacktrace]
     (try
