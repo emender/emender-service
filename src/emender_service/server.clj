@@ -54,6 +54,8 @@
         [:get  "/info"]         (rest-api/info-handler request (get-hostname))
         [:get  "/job-list"]     (rest-api/get-job-list-handler request)
         [:get  "/jobs"]         (rest-api/get-job-list-handler request)
+        [:get  "/book-list"]    (rest-api/get-book-list-handler request)
+        [:get  "/books"]        (rest-api/get-book-list-handler request)
         [:get  "/job-info"]     (rest-api/get-job-info-handler request)
         [:post "/job-started"]  (rest-api/job-started-handler  request)
         [:post "/job-finished"] (rest-api/job-finished-handler request)

@@ -90,20 +90,47 @@
         ;(pprint/pprint results)
         (send-response {:status :ok})))
 
-(defn get-job-list-handler-
-    [request]
+(defn read-job-list-from-cache
+    []
     (let [res @results/results
           names (keys res)]
           (if names
               (send-response names)
               (send-response []))))
 
-(defn get-job-list-handler
-    [request]
+(defn read-job-list-from-database
+    []
     (let [job-list (db-interface/read-job-list)]
         (if job-list
             (send-response job-list)
             (send-response []))))
+
+(defn read-book-list-from-cache
+    []
+    (let [res @results/results
+          names (keys res)]
+          (if names
+              (send-response names)
+              (send-response []))))
+
+(defn read-book-list-from-database
+    []
+    (let [book-list (db-interface/read-book-list)]
+        (if book-list
+            (send-response book-list)
+            (send-response []))))
+
+(defn get-job-list-handler
+    [request]
+    (if (config/use-result-cache? request)
+        (read-job-list-from-cache)
+        (read-job-list-from-database)))
+
+(defn get-book-list-handler
+    [request]
+    (if (config/use-result-cache? request)
+        (read-book-list-from-cache)
+        (read-book-list-from-database)))
 
 (defn get-job-info-handler
     [request]
@@ -131,37 +158,50 @@
                         :results results}))
 
 (defn run-emend
-    [job-name path-to-emender path-to-tests tests book-directory]
+    [job-name path-to-emender path-to-tests tests book-directory delete-workdirs?]
     (println "Starting Emend against the book directory" book-directory)
+    (println book-directory)
+    (println (type book-directory))
+
     (let [tests+paths (create-tests+paths path-to-tests tests)]
         (apply exec/exec "scripts/start_proceed" path-to-emender path-to-tests book-directory tests+paths))
         (try
             (let [results (-> (str book-directory "/results.json") slurp json/read-str)]
+                (if delete-workdirs?
+                    (file-utils/remove-temporary-directory book-directory))
                 (if results
-                    (process-results job-name results)
-                    (send-response {:status :reading-job-result-failed})))
+                    (process-results job-name results))
+                    (send-response {:status :reading-job-result-failed}))
             (catch Exception e
+                (if delete-workdirs?
+                    (file-utils/remove-temporary-directory book-directory))
                 (send-response {:status :emender-job-failed}))))
 
 (defn run-test-handler
     [request]
-    (let [job-name      (read-job-name-from-request request)
-          path-to-emend (file-utils/>abs-path (config/path-to-emender request))
-          path-to-tests (file-utils/>abs-path (config/path-to-tests request))
-          test-info     (-> (read-request-body request) body->test-info)
-          repo-url      (-> test-info :repository :url)
-          branch        (-> test-info :repository :branch)
-          tests         (-> test-info :tests)]
-        (println "job name " job-name)
-        (println "test dir " path-to-tests)
-        (println "repo URL " repo-url)
-        (println "branch   " branch)
-        (println "Emender  " path-to-emend)
-        (println "tests    " tests)
-        (let [clone-results {:directory (new java.io.File "/tmp/emender-service-1460560704093/")}]
-              ;clone-results (git-utils/clone-remote-repository repo-url branch)]
-             (if (:directory clone-results)
+    (let [job-name         (read-job-name-from-request request)
+          path-to-emend    (file-utils/>abs-path (config/path-to-emender request))
+          path-to-tests    (file-utils/>abs-path (config/path-to-tests request))
+          test-info        (-> (read-request-body request) body->test-info)
+          repo-url         (-> test-info :repository :url)
+          branch           (-> test-info :repository :branch)
+          tests            (-> test-info :tests)
+          delete-workdirs? (config/delete-workdirs? request)]
+        (println "job name    " job-name)
+        (println "test dir    " path-to-tests)
+        (println "repo URL    " repo-url)
+        (println "branch      " branch)
+        (println "Emender     " path-to-emend)
+        (println "tests       " tests)
+        (println "del workdir " delete-workdirs?)
+        (let [;clone-results {:directory (new java.io.File "/tmp/emender-service-1460560704093/")}]
+              clone-results (git-utils/clone-remote-repository repo-url branch)]
+             (if (= (:status clone-results) :ok)
                  (run-emend job-name path-to-emend path-to-tests tests
-                            (.getAbsolutePath (:directory clone-results)))
-                 (repo-clone-failed (:message clone-results) job-name repo-url branch)))))
+                            (.getAbsolutePath (:directory clone-results))
+                            delete-workdirs?)
+                 (do
+                     (if delete-workdirs?
+                         (file-utils/remove-temporary-directory (:directory clone-results)))
+                     (repo-clone-failed (:message clone-results) job-name repo-url branch))))))
 
