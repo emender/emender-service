@@ -15,8 +15,8 @@ echo "Requests"
 echo ""
 echo ""
 
-echo "Jobs"
-./list_jobs.sh
+echo "Job operations"
+./list_job_operations.sh
 echo ""
 echo ""
 

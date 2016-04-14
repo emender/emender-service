@@ -2,5 +2,5 @@
 
 DATABASE=emender-service.db
 
-sqlite3 ../${DATABASE} "select * from jobs order by id"
+sqlite3 ../${DATABASE} "select * from job_operations order by id"
 

@@ -1,4 +1,4 @@
-create table jobs (
+create table job_operations (
     id          integer primary key asc,
     datetime    text,
     job         text,
