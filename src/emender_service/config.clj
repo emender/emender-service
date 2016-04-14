@@ -67,3 +67,10 @@
     [request]
     (-> request :configuration :config :verbose))
 
+(defn use-result-cache?
+    [request]
+    (-> request :configuration :result-cache :use-cache))
+
+(defn pretty-print-edn?
+    [request]
+    (-> request :configuration :result-cache :pretty-print))
