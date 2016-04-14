@@ -55,19 +55,19 @@
           (if (:error clone-repo-result)
               (do
                   ;(file-utils/remove-directory temporary-repodir)
-                  {:directory nil
-                   :status "Failure"
+                  {:directory temporary-repodir
+                   :status :failure
                    :message (str "can not clone repository: " (:error clone-repo-result))})
               (do
                   (jgit/with-repo temporary-repodir
                       (if (not (checkout-origin-branch repo branch))
                           (do
                               ;(file-utils/remove-directory temporary-repodir)
-                              {:directory nil
-                               :status "Failure"
+                              {:directory temporary-repodir
+                               :status :failure
                                :message (str "unable to checkout branch '" branch "'")})
                           {:directory temporary-repodir
-                           :status "OK"
+                           :status :ok
                            :message "clone ok"})))
           )))
 
