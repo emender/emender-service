@@ -18,16 +18,18 @@
 
 (defn render-edn-data
     "Render EDN data to be used as off-memory cache."
-    [output-data]
-    (with-out-str (clojure.pprint/pprint output-data)))
+    [output-data pretty-print?]
+    (if pretty-print?
+        (with-out-str (clojure.pprint/pprint output-data))
+        (with-out-str (println output-data))))
 
 (defn add-new-results
     [job-name new-results]
     (swap! results assoc job-name new-results))
 
 (defn store-results
-    []
-    (let [edn-data (render-edn-data @results)]
+    [pretty-print?]
+    (let [edn-data (render-edn-data @results pretty-print?)]
         (spit "results2.edn" edn-data)
         ; rename files atomically (on the same filesystem)
         (file-utils/mv-file "results2.edn" "results.edn")))

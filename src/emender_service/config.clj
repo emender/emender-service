@@ -74,3 +74,4 @@
 (defn pretty-print-edn?
     [request]
     (-> request :configuration :result-cache :pretty-print))
+
