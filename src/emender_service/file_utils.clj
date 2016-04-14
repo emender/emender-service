@@ -1,5 +1,7 @@
 (ns emender-service.file-utils)
 
+(require '[hozumi.rm-rf    :as rm-rf])
+
 (def temporary-name-prefix
     "emender-service-")
 
@@ -54,6 +56,25 @@
           temp-dir     (new java.io.File basedir-name base-name)]
         (.mkdir temp-dir)
         temp-dir))
+
+(defmulti remove-temporary-directory
+    "Remove (delete) temporary directory that resides in /tmp (at least on Linux)."
+    class)
+
+(defmethod remove-temporary-directory java.io.File
+    [directory-name]
+    (let [abs-path (.getAbsolutePath directory-name)]
+        ; make sure we are not going to remove wrong directory!
+        (if (.startsWith abs-path "/tmp")
+            (rm-rf/rm-r directory-name))))
+
+(defmethod remove-temporary-directory java.lang.String
+    [directory-name]
+    (remove-temporary-directory (new java.io.File directory-name)))
+
+(defn remove-directory
+    [directory]
+    (rm-rf/rm-r directory))
 
 (defn move-file
     "Move or rename one file. On the same filesystem the rename should be atomic."
