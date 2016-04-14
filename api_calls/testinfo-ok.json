@@ -1,0 +1,9 @@
+{
+    "repository": {
+        "url" : "git@github.com:emender/emender-testbook.git"
+        "branch" : "master"
+    },
+    "tests": [
+        "Test1"
+    ]
+}
