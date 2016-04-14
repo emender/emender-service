@@ -125,7 +125,7 @@
 
 (defn read-book-list-from-database
     []
-    (let [book-list (db-interface/read-book-list)]
+    (let [book-list (map #(-> % first second) (db-interface/read-book-list))]
         (if book-list
             (send-response book-list)
             (send-response []))))
