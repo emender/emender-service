@@ -38,7 +38,9 @@
     (-> configuration
         (update-in [:jenkins :port] parse-int)
         (update-in [:result-cache :pretty-print] parse-boolean)
-        (update-in [:config :verbose] parse-boolean)))
+        (update-in [:result-cache :use-cache] parse-boolean)
+        (update-in [:config :verbose] parse-boolean)
+        (update-in [:config :delete-workdirs] parse-boolean)))
 
 (defn load-configuration
     "Load configuration from the provided INI file."
@@ -74,4 +76,8 @@
 (defn pretty-print-edn?
     [request]
     (-> request :configuration :result-cache :pretty-print))
+
+(defn delete-workdirs?
+    [request]
+    (-> request :configuration :config :delete-workdirs))
 
