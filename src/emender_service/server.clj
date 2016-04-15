@@ -42,6 +42,18 @@
         (-> (http-response/response (html-renderer/render-book-list-page book-list))
             (http-response/content-type "text/html"))))
 
+(defn render-jobs-for-book
+    [request]
+)
+
+(defn render-job-info
+    [request]
+    (let [job-id (-> request :params (get "id"))
+          job-info (db-interface/read-job-info job-id)
+          test-results (json/read-str (:results job-info))]
+        (-> (http-response/response (html-renderer/render-job-info job-info test-results))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -88,6 +100,8 @@
         "/"                    (render-front-page     request)
         "/job-list"            (render-job-list-page  request)
         "/book-list"           (render-book-list-page request)
+        "/jobs-for-book"       (render-jobs-for-book  request)
+        "/job-info"            (render-job-info       request)
         ))
 
 (defn handler

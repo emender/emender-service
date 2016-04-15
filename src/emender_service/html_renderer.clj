@@ -135,6 +135,55 @@
         ] ; </body>
     ))
 
+(defn render-job-info
+    "Render page with information for the selected job"
+    [job-info test-results]
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 "Job info"]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                        [:tr [:td "Job id"]
+                             [:td (:id job-info)]]
+                        [:tr [:td "Finished at"]
+                             [:td (:datetime job-info)]]
+                        [:tr [:td "Book name"]
+                             [:td (:job job-info)]]
+                        [:tr [:td "Git URL"]
+                             [:td (or (:url job-info) "?")]]
+                        [:tr [:td "Branch"]
+                             [:td (or (:branch job-info) "?")]]
+                        [:tr [:td "Tests"]
+                             [:td (count test-results)]]
+                    ]
+                    [:h3 "Results"]
+                    [:ul
+                        (for [test-result test-results]
+                            [:li (key test-result)
+                                [:ol
+                                    (for [one-test (val test-result)]
+                                        [:li (key one-test)
+                                            [:ul
+                                                (for [step (val one-test)]
+                                                    [:li (get step "status")
+                                                         "&nbsp;"
+                                                         (get step "message")]
+                                                )
+                                        ]]
+                                    )]
+                            ])
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
                 ]
                 [:br][:br][:br][:br]
                 (render-html-footer)
