@@ -225,3 +225,16 @@
                  [:td (:operation l)]
             ])))
 
+(defn render-request-log-page
+    [log]
+    (render-log "Request log"
+        [:tr [:th "ID"] [:th "Timestamp"] [:th "URI"] [:th "IP"] [:th "Params"] [:th "Useragent"]]
+        (for [l log]
+            [:tr [:td (:id l)]
+                 [:td (:datetime l)]
+                 [:td (:uri l)]
+                 [:td (:ipaddress l)]
+                 [:td (:params l)]
+                 [:td (:useragent l)]
+            ])))
+
