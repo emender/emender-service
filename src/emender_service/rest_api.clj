@@ -164,8 +164,8 @@
     (map #(str path-to-tests "/" % ".lua") tests))
 
 (defn process-results
-    [job-name results]
-        (db-interface/log-job-results job-name results)
+    [job-name repo-url branch results]
+        (db-interface/log-job-results job-name repo-url branch results)
         (println "job name" job-name)
         (println "results:" results)
         ;(results/add-new-results job-name results)
@@ -174,7 +174,7 @@
                         :results results}))
 
 (defn run-emend
-    [job-name path-to-emender path-to-tests tests book-directory delete-workdirs?]
+    [job-name repo-url branch path-to-emender path-to-tests tests book-directory delete-workdirs?]
     (println "Starting Emend against the book directory" book-directory)
     (println book-directory)
     (println (type book-directory))
@@ -186,8 +186,8 @@
                 (if delete-workdirs?
                     (file-utils/remove-temporary-directory book-directory))
                 (if results
-                    (process-results job-name results))
-                    (send-response {:status :reading-job-result-failed}))
+                    (process-results job-name repo-url branch results)
+                    (send-response {:status :reading-job-result-failed})))
             (catch Exception e
                 (if delete-workdirs?
                     (file-utils/remove-temporary-directory book-directory))
@@ -213,7 +213,8 @@
         (let [;clone-results {:directory (new java.io.File "/tmp/emender-service-1460560704093/")}]
               clone-results (git-utils/clone-remote-repository repo-url branch)]
              (if (= (:status clone-results) :ok)
-                 (run-emend job-name path-to-emend path-to-tests tests
+                 (run-emend job-name repo-url branch
+                            path-to-emend path-to-tests tests
                             (.getAbsolutePath (:directory clone-results))
                             delete-workdirs?)
                  (do
