@@ -191,3 +191,37 @@
         ] ; </body>
     ))
 
+(defn render-log
+    [title table-header log-part]
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 title]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                        table-header
+                        log-part
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
+(defn render-operation-log-page
+    [log]
+    (render-log "Operation log"
+        [:tr [:th "ID"] [:th "Timestamp"] [:th "Job"] [:th "GIT URL"] [:th "Branch"] [:th "Operation"]]
+        (for [l log]
+            [:tr [:td (:id l)]
+                 [:td (:datetime l)]
+                 [:td (:job l)]
+                 [:td (:url l)]
+                 [:td (:branch l)]
+                 [:td (:operation l)]
+            ])))
+

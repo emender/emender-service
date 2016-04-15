@@ -54,6 +54,13 @@
         (-> (http-response/response (html-renderer/render-job-info job-info test-results))
             (http-response/content-type "text/html"))))
 
+(defn render-operation-log
+    [request]
+    (let [log (db-interface/read-operation-log)]
+        (println log)
+        (-> (http-response/response (html-renderer/render-operation-log-page log))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -102,6 +109,7 @@
         "/book-list"           (render-book-list-page request)
         "/jobs-for-book"       (render-jobs-for-book  request)
         "/job-info"            (render-job-info       request)
+        "/operation-log"       (render-operation-log  request)
         ))
 
 (defn handler
