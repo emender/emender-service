@@ -63,8 +63,9 @@
 (defn read-job-info
     [job-id]
     (try
-        (jdbc/query db-spec/emender-service-db
-                    ["select * from results where id = ?" job-id])
+        (first
+            (jdbc/query db-spec/emender-service-db
+                        ["select * from results where id = ?" job-id]))
         (catch Exception e
             (println e)
             [])))
