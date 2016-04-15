@@ -110,7 +110,7 @@
     []
     (try
         (jdbc/query db-spec/emender-service-db
-                    ["select * from results order by id"])
+                    ["select id, datetime, job, url, branch from results order by id"])
         (catch Exception e
             (println e)
             [])))
