@@ -106,6 +106,15 @@
             (println e)
             [])))
 
+(defn read-results
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select * from results order by id"])
+        (catch Exception e
+            (println e)
+            [])))
+
 (defn record-error
     [job-name repo-url branch datetime message stacktrace]
     (try
