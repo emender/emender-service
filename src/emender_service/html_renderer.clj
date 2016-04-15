@@ -238,3 +238,16 @@
                  [:td (:useragent l)]
             ])))
 
+(defn render-results-page
+    [results]
+    (render-log "Results"
+        [:tr [:th "ID"] [:th "Timestamp"] [:th "Job"] [:th "GIT URL"] [:th "Branch"] [:th "Results"]]
+        (for [result results]
+            [:tr [:td (:id result)]
+                 [:td (:datetime result)]
+                 [:td (:job result)]
+                 [:td (:url result)]
+                 [:td (:branch result)]
+                 [:td [:a {:href (str "/job-info?id=" (:id result))} "Here"]]
+            ])))
+

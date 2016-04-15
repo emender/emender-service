@@ -68,6 +68,13 @@
         (-> (http-response/response (html-renderer/render-request-log-page log))
             (http-response/content-type "text/html"))))
 
+(defn render-results
+    [request]
+    (let [results (db-interface/read-results)]
+        (println results)
+        (-> (http-response/response (html-renderer/render-results-page results))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -118,6 +125,7 @@
         "/job-info"            (render-job-info       request)
         "/operation-log"       (render-operation-log  request)
         "/request-log"         (render-request-log    request)
+        "/results"             (render-results        request)
         ))
 
 (defn handler
