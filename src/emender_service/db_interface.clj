@@ -70,6 +70,42 @@
             (println e)
             [])))
 
+(defn read-operation-log
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select * from job_operations order by id"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-log
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select * from log order by id"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-error-log
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select * from errors order by id"])
+        (catch Exception e
+            (println e)
+            [])))
+
+(defn read-requests-log
+    []
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select * from requests order by id"])
+        (catch Exception e
+            (println e)
+            [])))
+
 (defn record-error
     [job-name repo-url branch datetime message stacktrace]
     (try
