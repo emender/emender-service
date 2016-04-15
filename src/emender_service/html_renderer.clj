@@ -26,7 +26,7 @@
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
         (page/include-css "bootstrap.min.css")
         (page/include-css "emender-service.css")
-        (page/include-js  "bootstrap.min.js")
+        ;(page/include-js  "bootstrap.min.js")
     ] ; head
 )
 
@@ -66,12 +66,53 @@
     []
     (page/xhtml
         (render-html-header)
-        [:body
+        [:body {:style "padding-top:70px"}
             [:div {:class "container"}
                 (render-navigation-bar-section)
                 [:div {:class "col-md-10"}
                     [:h2 "Emender service"]
-                    [:p "xyzzy"]
+                    [:table
+                        [:tr [:td [:a {:href "/job-list"} "Job list"]]]
+                        [:tr [:td [:a {:href "/book-list"} "Book list"]]]
+                        [:tr [:td "&nbsp;"]]
+                        [:tr [:td [:a {:href "/configuration"} "Configuration"]]]
+                        [:tr [:td "&nbsp;"]]
+                        [:tr [:td [:a {:href "/operation-log"} "Operation log"]]]
+                        [:tr [:td [:a {:href "/request-log"} "Request log"]]]
+                        [:tr [:td [:a {:href "/errors"} "Error log"]]]
+                        [:tr [:td [:a {:href "/results"} "Results log"]]]
+                        [:tr [:td [:a {:href "/log"} "Common log"]]]
+                    ]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
+(defn render-job-list-page
+    "Render page with list of all jobs"
+    [job-list]
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 "Job list"]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                        (for [job job-list]
+                            [:tr [:td (:id job)]
+                                 [:td [:a {:href (str "/job-info?id=" (:id job))} (:job job)]]])
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
                 ]
                 [:br][:br][:br][:br]
                 (render-html-footer)

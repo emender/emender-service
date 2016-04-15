@@ -28,6 +28,13 @@
     (-> (http-response/response (html-renderer/render-front-page))
         (http-response/content-type "text/html")))
 
+(defn render-job-list-page
+    [request]
+    (let [job-list (db-interface/read-job-list)]
+        (println job-list)
+        (-> (http-response/response (html-renderer/render-job-list-page job-list))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -71,7 +78,9 @@
         "/bootstrap.min.css"   (return-file "bootstrap.min.css"   "text/css")
         "/emender-service.css" (return-file "emender-service.css" "text/css")
         "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
-        "/"                    (render-front-page request)))
+        "/"                    (render-front-page     request)
+        "/job-list"            (render-job-list-page  request)
+        ))
 
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
