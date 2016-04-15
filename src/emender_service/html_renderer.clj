@@ -184,12 +184,6 @@
         ] ; </body>
     ))
 
-                ]
-                [:br][:br][:br][:br]
-                (render-html-footer)
-            ] ; </div class="container">
-        ] ; </body>
-    ))
 
 (defn render-log
     [title table-header log-part]
@@ -236,6 +230,34 @@
                  [:td (:ipaddress l)]
                  [:td (:params l)]
                  [:td (:useragent l)]
+            ])))
+
+(defn render-error-log-page
+    [log]
+    (render-log "Error log"
+        [:tr [:th "ID"] [:th "Timestamp"] [:th "Job"] [:th "GIT URL"] [:th "Branch"] [:th "Message"] [:th "Stacktrace"]]
+        (for [l log]
+            [:tr [:td (:id l)]
+                 [:td (:datetime l)]
+                 [:td (:job l)]
+                 [:td (:url l)]
+                 [:td (:branch l)]
+                 [:td (:message l)]
+                 [:td (:stacktrace l)]
+            ])))
+
+(defn render-log-page
+    [log]
+    (render-log "Log"
+        [:tr [:th "ID"] [:th "Timestamp"] [:th "Job"] [:th "GIT URL"] [:th "Branch"] [:th "Operation"] [:th "Message"]]
+        (for [l log]
+            [:tr [:td (:id l)]
+                 [:td (:datetime l)]
+                 [:td (:job l)]
+                 [:td (:url l)]
+                 [:td (:branch l)]
+                 [:td (:operation l)]
+                 [:td (:message l)]
             ])))
 
 (defn render-results-page
