@@ -113,6 +113,28 @@
         ] ; </body>
     ))
 
+(defn render-book-list-page
+    "Render page with list of all books"
+    [book-list]
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 "Book list"]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                        (for [book book-list]
+                            [:tr [:td [:a {:href (str "/jobs-for-book?book=" (:job book))} (:job book)]]])
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
+
                 ]
                 [:br][:br][:br][:br]
                 (render-html-footer)

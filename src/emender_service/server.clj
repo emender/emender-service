@@ -35,6 +35,13 @@
         (-> (http-response/response (html-renderer/render-job-list-page job-list))
             (http-response/content-type "text/html"))))
 
+(defn render-book-list-page
+    [request]
+    (let [book-list (db-interface/read-book-list)]
+        (println book-list)
+        (-> (http-response/response (html-renderer/render-book-list-page book-list))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -80,6 +87,7 @@
         "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
         "/"                    (render-front-page     request)
         "/job-list"            (render-job-list-page  request)
+        "/book-list"           (render-book-list-page request)
         ))
 
 (defn handler
