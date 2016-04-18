@@ -108,7 +108,8 @@
                 (-> (http-response/response output-html)
             (http-response/content-type "text/html"))))))
 
-(defn return-file
+; not used anymore
+(defn return-file-
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
     [file-name content-type]
@@ -118,6 +119,10 @@
             (-> (http-response/response file)
                 (http-response/content-type content-type))
             (println "return-file(): can not access file: " (.getName file)))))
+
+(defn return-file
+    [file-name content-type]
+    (http-response/file-response file-name {:root "www"}))
 
 (defn get-hostname
     []
@@ -149,8 +154,12 @@
         "/favicon.ico"                     (return-file "favicon.ico"         "image/x-icon")
         "/emender-service.css"             (return-file "emender-service.css" "image/x-icon")
         "/bootstrap.min.css"               (return-file "bootstrap.min.css"   "text/css")
+        ; special case for Emender tests
+        "/bootstrap/css/bootstrap.min.css" (return-file "bootstrap.min.css"   "text/css")
         "/emender-service.css"             (return-file "emender-service.css" "text/css")
         "/bootstrap.min.js"                (return-file "bootstrap.min.js"    "application/javascript")
+        "/bootstrap/js/scripts.js"         (return-file "scripts.js"          "application/javascript")
+        "/yoana.css"                       (return-file "yoana.css"           "text/css")
         "/"                      (render-front-page     request)
         "/job-list"              (render-job-list-page  request)
         "/book-list"             (render-book-list-page request)
