@@ -35,10 +35,10 @@
             (println e))))
 
 (defn record-job-results
-    [job-name repo-url branch datetime results]
+    [job-name repo-url branch datetime results html]
     (try
         (jdbc/insert! db-spec/emender-service-db
-                      :results {:job job-name :datetime datetime :url repo-url :branch branch :results results})
+                      :results {:job job-name :datetime datetime :url repo-url :branch branch :results results :html html})
         (catch Exception e
             (println e))))
 
@@ -122,6 +122,16 @@
             (println e)
             [])))
 
+(defn read-html-results-for-job-id
+    [job-id]
+    (try
+        (:html (first
+            (jdbc/query db-spec/emender-service-db
+                        ["select html from results where id = ?" job-id])))
+        (catch Exception e
+            (println e)
+            [])))
+
 (defn record-error
     [job-name repo-url branch datetime message stacktrace]
     (try
@@ -152,10 +162,12 @@
      (log-job-finished job-name nil nil)))
 
 (defn log-job-results
-    ([job-name repo-url branch results]
+    ([job-name repo-url branch results html]
      (let [formatted-date (format-date/format-current-date)]
          (record-job-operation-event job-name repo-url branch formatted-date "results")
-         (record-job-results job-name repo-url branch formatted-date results)))
+         (record-job-results job-name repo-url branch formatted-date results html)))
+    ([job-name repo-url branch results]
+     (log-job-results job-name repo-url branch results nil))
     ([job-name results]
      (log-job-results job-name nil nil results)))
 
