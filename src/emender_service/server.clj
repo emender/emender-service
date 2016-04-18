@@ -93,6 +93,13 @@
         (-> (http-response/response (html-renderer/render-log-page log))
             (http-response/content-type "text/html"))))
 
+(defn render-configuration
+    [request]
+    (let [configuration (:configuration request)]
+        (println configuration)
+        (-> (http-response/response (html-renderer/render-configuration-page configuration))
+            (http-response/content-type "text/html"))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -146,6 +153,7 @@
         "/results"               (render-results        request)
         "/errors"                (render-errors         request)
         "/log"                   (render-log            request)
+        "/configuration"         (render-configuration  request)
         ))
 
 (defn handler

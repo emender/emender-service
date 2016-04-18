@@ -187,6 +187,35 @@
         ] ; </body>
     ))
 
+(defn render-configuration-page
+    "Render page with actual configuration"
+    [configuration]
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 "Configuration"]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                        (for [section configuration]
+                            [:section
+                                [:tr [:th {:colspan "2"} (key section)]]
+                                (for [option (val section)]
+                                    [:tr [:td (key option)]
+                                         [:td (val option)]])
+                                [:tr [:td {:colspan "2"} "&nbsp;"]]
+                            ])
+                        [:tr [:td "Jenkins"]
+                             [:td "xx"]]
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
 
 (defn render-log
     [title table-header log-part]
