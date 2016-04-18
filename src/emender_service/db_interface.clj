@@ -43,13 +43,20 @@
             (println e))))
 
 (defn read-job-list
-    []
+    ([]
     (try
         (jdbc/query db-spec/emender-service-db
                     ["select id, job from results order by id,job"])
         (catch Exception e
             (println e)
             [])))
+    ([book-name]
+    (try
+        (jdbc/query db-spec/emender-service-db
+                    ["select id, job from results where job=? order by id,job" book-name])
+        (catch Exception e
+            (println e)
+            []))))
 
 (defn read-book-list
     []
