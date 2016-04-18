@@ -100,6 +100,14 @@
         (-> (http-response/response (html-renderer/render-configuration-page configuration))
             (http-response/content-type "text/html"))))
 
+(defn render-test-results
+    [request]
+    (let [job-id (-> request :params (get "job"))]
+        (if job-id
+            (let [output-html (db-interface/read-html-results-for-job-id job-id)]
+                (-> (http-response/response output-html)
+            (http-response/content-type "text/html"))))))
+
 (defn return-file
     "Creates HTTP response containing content of specified file.
      Special value nil / HTTP response 404 is returned in case of any I/O error."
@@ -154,7 +162,7 @@
         "/errors"                (render-errors         request)
         "/log"                   (render-log            request)
         "/configuration"         (render-configuration  request)
-        ))
+        "/rendered-test-results" (render-test-results   request)))
 
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."
