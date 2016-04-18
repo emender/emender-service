@@ -11,7 +11,8 @@
 ;
 
 (ns emender-service.core
-    "Core module that contains -main function called by Leiningen to start the application.")
+    "Core module that contains -main function called by Leiningen to start the application."
+    (:gen-class))
 
 (require '[ring.adapter.jetty      :as jetty])
 (require '[ring.middleware.params  :as http-params])
