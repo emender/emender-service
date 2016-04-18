@@ -132,6 +132,25 @@
             (println e)
             [])))
 
+(defn read-record-count
+    [table-name]
+    (try
+        (:cnt
+            (first
+                (jdbc/query db-spec/emender-service-db
+                            [(str "select count(*) as cnt from " table-name)])))
+        (catch Exception e
+            (println e)
+            0)))
+
+(defn read-db-stats
+    []
+    {:log            (read-record-count "log")
+     :errors         (read-record-count "errors")
+     :requests       (read-record-count "requests")
+     :job-operations (read-record-count "job_operations")
+     :results        (read-record-count "results")})
+
 (defn record-error
     [job-name repo-url branch datetime message stacktrace]
     (try
