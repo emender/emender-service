@@ -164,8 +164,8 @@
     (map #(str path-to-tests "/" % ".lua") tests))
 
 (defn process-results
-    [job-name repo-url branch results]
-        (db-interface/log-job-results job-name repo-url branch results)
+    [job-name repo-url branch results html]
+        (db-interface/log-job-results job-name repo-url branch results html)
         (println "job name" job-name)
         (println "results:" results)
         ;(results/add-new-results job-name results)
@@ -182,11 +182,12 @@
     (let [tests+paths (create-tests+paths path-to-tests tests)]
         (apply exec/exec "scripts/start_proceed" path-to-emender path-to-tests book-directory tests+paths))
         (try
-            (let [results (-> (str book-directory "/results.json") slurp json/read-str)]
+            (let [results (-> (str book-directory "/results.json") slurp json/read-str)
+                  html    (-> (str book-directory "/results.html") slurp)]
                 (if delete-workdirs?
                     (file-utils/remove-temporary-directory book-directory))
-                (if results
-                    (process-results job-name repo-url branch results)
+                (if (and results html)
+                    (process-results job-name repo-url branch results html)
                     (send-response {:status :reading-job-result-failed})))
             (catch Exception e
                 (if delete-workdirs?
