@@ -44,7 +44,11 @@
 
 (defn render-jobs-for-book
     [request]
-)
+    (let [book-name (-> request :params (get "book"))
+          job-list  (db-interface/read-job-list book-name)]
+        (println job-list)
+        (-> (http-response/response (html-renderer/render-job-list-page job-list))
+            (http-response/content-type "text/html"))))
 
 (defn render-job-info
     [request]
@@ -127,21 +131,21 @@
 (defn non-api-call-handler
     [request uri]
     (condp = uri
-        "/favicon.ico"         (return-file "favicon.ico"         "image/x-icon")
-        "/emender-service.css" (return-file "emender-service.css" "image/x-icon")
-        "/bootstrap.min.css"   (return-file "bootstrap.min.css"   "text/css")
-        "/emender-service.css" (return-file "emender-service.css" "text/css")
-        "/bootstrap.min.js"    (return-file "bootstrap.min.js"    "application/javascript")
-        "/"                    (render-front-page     request)
-        "/job-list"            (render-job-list-page  request)
-        "/book-list"           (render-book-list-page request)
-        "/jobs-for-book"       (render-jobs-for-book  request)
-        "/job-info"            (render-job-info       request)
-        "/operation-log"       (render-operation-log  request)
-        "/request-log"         (render-request-log    request)
-        "/results"             (render-results        request)
-        "/errors"              (render-errors         request)
-        "/log"                 (render-log            request)
+        "/favicon.ico"                     (return-file "favicon.ico"         "image/x-icon")
+        "/emender-service.css"             (return-file "emender-service.css" "image/x-icon")
+        "/bootstrap.min.css"               (return-file "bootstrap.min.css"   "text/css")
+        "/emender-service.css"             (return-file "emender-service.css" "text/css")
+        "/bootstrap.min.js"                (return-file "bootstrap.min.js"    "application/javascript")
+        "/"                      (render-front-page     request)
+        "/job-list"              (render-job-list-page  request)
+        "/book-list"             (render-book-list-page request)
+        "/jobs-for-book"         (render-jobs-for-book  request)
+        "/job-info"              (render-job-info       request)
+        "/operation-log"         (render-operation-log  request)
+        "/request-log"           (render-request-log    request)
+        "/results"               (render-results        request)
+        "/errors"                (render-errors         request)
+        "/log"                   (render-log            request)
         ))
 
 (defn handler

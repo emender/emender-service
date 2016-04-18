@@ -103,7 +103,8 @@
                     [:table {:class "table table-striped table-condensed table-hover table-bordered"}
                         (for [job job-list]
                             [:tr [:td (:id job)]
-                                 [:td [:a {:href (str "/job-info?id=" (:id job))} (:job job)]]])
+                                 [:td [:a {:href (str "/job-info?id=" (:id job))} (:job job)]]
+                                 [:td [:a {:href (str "/rendered-test-results?job=" (:id job))} "Test results page"]]])
                     ]
                 [:div [:a {:href "/"} "Back"]]
                 [:br][:br][:br][:br]
@@ -158,6 +159,8 @@
                              [:td (or (:branch job-info) "?")]]
                         [:tr [:td "Tests"]
                              [:td (count test-results)]]
+                        [:tr [:td "Test results page"]
+                             [:td [:a {:href (str "/rendered-test-results?job=" (:id job-info))} (str "/rendered-test-results?job=" (:id job-info))]]]
                     ]
                     [:h3 "Results"]
                     [:ul
