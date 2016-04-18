@@ -22,7 +22,8 @@ create table results (
     job         text,
     url         text,
     branch      text,
-    results     text
+    results     text,
+    html        text
 );
 
 create table errors (
