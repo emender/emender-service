@@ -1,0 +1,128 @@
+/* bs */
+
+html, body {
+  height: 100%;
+  background-color: #F0F2F7;
+}
+a,
+a:hover {
+  text-decoration: none;
+}
+.container-fluid.top-level {
+  padding: 0 15px;
+}
+.emender-header {
+  border-left: 3px solid black;
+  padding: 0 0 5px 10px;
+  margin-bottom: 10px;
+}
+.emender-header ul li {
+  margin: 0;
+  padding: 0;
+}
+.page-header h3 {
+  text-transform: uppercase;
+  padding: 5px 0 0 0;
+}
+.page-header {
+  margin: 20px 0 0 0;
+  border: none;
+}
+h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+.tab-pane .panel,
+.tab-pane .panel-heading {
+  background-color: #F0F2F7 !important;
+}
+.tab-pane .summary-bars tr td:last-child {
+  width: 100%;
+}
+.tab-pane {
+  padding: 0 10px 10px 10px;
+}
+.nav-pills > li > a {
+  background-color: #DADCE0 !important;
+  border: 1px solid #CBCDD1;
+  padding: 0 1em;
+}
+.nav-pills > li {
+  margin: 3px !important;
+}
+.nav-pills > .active > a {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid grey;
+}
+.nav-pills > li > a:hover {
+  background-color: #E4E6EA !important;
+}
+.nav-pills > .active > a:hover {
+  background-color: white !important;
+}
+.progress { margin-bottom: 10px; }
+.summary table { margin-top: 20px; }
+td { 
+  font-size: small; 
+  padding-right: 10px;
+  vertical-align: top;
+}
+.pass { color: #5cb85c; }
+.fail { color: #d9534f; }
+.info { color: #f0ad4e; }
+.norun { color: gray; }
+.pass,
+.fail,
+.info {
+  font-weight: bold;
+}
+.nav-pills .bullet {
+  font-size: 60px;
+  line-height: 10px;
+  vertical-align: -120%;
+}
+.tab-pane .bullet {
+  font-size: 50px;
+  line-height: 10px;
+  vertical-align: -100%;
+}
+.tab-pane ul { 
+  list-style-type: none;
+  padding: 0 0 10px 10px;
+  margin: 0;
+}
+.tab-pane { 
+  margin: 3px 0 15px 2px;
+}
+.tab-pane.active { 
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+.tab-pane ul { 
+  list-style-type: none;
+  padding: 0 0 10px 10px;
+  margin: 0;
+}
+.glyph { 
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+.collapse-widget {
+  text-align: right;
+}
+/* Toggled State */
+.panel-title .glyph:after {
+  content: "\e113";
+  vertical-align: middle;
+}
+.panel-title:before {
+  content: "hide ";
+}
+/* Default State */
+.panel-title.collapsed .glyph:after { 
+  content: "\e114";
+}
+.panel-title.collapsed:before { 
+  content: "show all ";
+}
