@@ -1,3 +1,3 @@
 #!/bin/env bash
-curl -v localhost:3000/v1/job-info/2
+curl -v localhost:3000/api/v1/job-info/2
 
