@@ -108,6 +108,13 @@
                 (-> (http-response/response output-html)
             (http-response/content-type "text/html"))))))
 
+(defn render-db-stats
+    [request]
+    (let [db-stats (db-interface/read-db-stats)]
+        (println db-stats)
+        (-> (http-response/response (html-renderer/render-db-stats-page db-stats))
+            (http-response/content-type "text/html"))))
+
 ; not used anymore
 (defn return-file-
     "Creates HTTP response containing content of specified file.
@@ -171,7 +178,8 @@
         "/errors"                (render-errors         request)
         "/log"                   (render-log            request)
         "/configuration"         (render-configuration  request)
-        "/rendered-test-results" (render-test-results   request)))
+        "/rendered-test-results" (render-test-results   request)
+        "/db-stats"              (render-db-stats       request)))
 
 (defn handler
     "Handler that is called by Ring for all requests received from user(s)."

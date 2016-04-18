@@ -82,6 +82,8 @@
                         [:tr [:td [:a {:href "/errors"} "Error log"]]]
                         [:tr [:td [:a {:href "/results"} "Results log"]]]
                         [:tr [:td [:a {:href "/log"} "Common log"]]]
+                        [:tr [:td "&nbsp;"]]
+                        [:tr [:td [:a {:href "/db-stats"} "Database status"]]]
                     ]
                 [:br][:br][:br][:br]
                 (render-html-footer)
@@ -304,4 +306,14 @@
                  [:td (:branch result)]
                  [:td [:a {:href (str "/job-info?id=" (:id result))} "Here"]]
             ])))
+
+(defn render-db-stats-page
+    "Render page with database status"
+    [db-stats]
+    (render-log "Database status"
+        [:tr [:th "Table"] [:th "Record count"]]
+        (for [db-stat db-stats]
+            [:tr [:td (key db-stat)]
+                 [:td (val db-stat)]])
+            ))
 
