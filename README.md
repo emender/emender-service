@@ -151,6 +151,36 @@ Return value:
 
 
 
+### Run test against given repository and branch
+
+Address: http://$hostname:$port/api/v1/run-test/$book-name
+
+Method:  POST
+
+Example:
+
+    $ curl -X POST --header "Content-Type: application/json" -d "@testinfo.json" -v "localhost:3000/api/v1/run-test/doc-Test-Book1+(test)"
+
+Content of testinfo.json
+
+    {
+        "repository": {
+            "url" : "git@github.com:emender/emender-testbook.git"
+            "branch" : "master"
+        },
+        "tests": [
+            "Test1",
+            "Test2",
+        ]
+    }
+
+Possible return values:
+
+    {"status":"ok","results":{"Test1": actual test results}}
+    {"status":"repo-clone-failed"}
+
+
+
 ## License
 
 Copyright © 2016 Pavel Tisnovsky <ptisnovs@redhat.com>, Red Hat
