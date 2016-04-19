@@ -4,16 +4,18 @@ REST API and web-based service to control Emender and to show test results gener
 
 
 
-## Prerequsities
+## Prerequisities
 
 ### Installation
 
 1. JVM version 6 or better
 1. Leiningen
+1. GNU Make
 
 ### For the already compiled service
 
 1. JRE version 6 or better (JRE 7 is recommended)
+1. GIT CLI client
 
 
 
@@ -21,6 +23,7 @@ REST API and web-based service to control Emender and to show test results gener
 
 1. Clone the emender-service repository
 1. Run the following command:
+
     $ make all
 
 
@@ -28,6 +31,7 @@ REST API and web-based service to control Emender and to show test results gener
 ## Usage
 
 To start the service, run the following command:
+
     $ make run
 
 
@@ -37,6 +41,40 @@ To start the service, run the following command:
 All options needs to be provided in the configuration file emender-service.ini
 
 ### Content of emender-service.ini
+
+The main configuration file is written in so-called INI format. File is divided
+into several sections, each section contain various pairs key=value. Please don't
+use quotes for string values, it's not necessary.
+
+    [jenkins]
+    hostname=http://my.jenkins.instance.org
+    port=8080
+
+    [tests]
+    job-suffix=(test)
+
+    [result-cache]
+    filename=results.edn
+    pretty-print=true
+    use-cache=false
+     
+    [api]
+    prefix=/api/v1
+
+    [ui]
+    mailto=ptisnovs@redhat.com
+
+    [emender]
+    path=/home/user/emender/
+    tests=/home/user/emender/test/
+
+    [config]
+    verbose=false
+    delete-workdirs=true
+
+The only section that needs to be changed is [emender]. You need to provide path to Emender itself
+and to Emender tests directory as well. The section [jenkins] and [tests] is not used at this moment,
+as it needs much better integration with Jenkins (not needed ATM).
 
 
 
