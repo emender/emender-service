@@ -143,17 +143,18 @@
 (defn api-call-handler
     [request uri method]
     (condp = [method (get-api-command request uri)]
-        [:get  "/info"]         (rest-api/info-handler request (get-hostname))
-        [:get  "/job-list"]     (rest-api/get-job-list-handler request)
-        [:get  "/jobs"]         (rest-api/get-job-list-handler request)
-        [:get  "/book-list"]    (rest-api/get-book-list-handler request)
-        [:get  "/books"]        (rest-api/get-book-list-handler request)
-        [:get  "/job-info"]     (rest-api/get-job-info-handler request)
-        [:post "/job-started"]  (rest-api/job-started-handler  request)
-        [:post "/job-finished"] (rest-api/job-finished-handler request)
-        [:post "/job-results"]  (rest-api/job-results-handler  request)
-        [:post "/run-test"]     (rest-api/run-test-handler     request)
-                                (rest-api/unknown-call-handler uri method)))
+        [:get  "/info"]             (rest-api/info-handler request (get-hostname))
+        [:get  "/job-list"]         (rest-api/get-job-list-handler request)
+        [:get  "/jobs"]             (rest-api/get-job-list-handler request)
+        [:get  "/book-list"]        (rest-api/get-book-list-handler request)
+        [:get  "/books"]            (rest-api/get-book-list-handler request)
+        [:get  "/job-info"]         (rest-api/get-job-info-handler request)
+        [:post "/job-started"]      (rest-api/job-started-handler  request)
+        [:post "/job-finished"]     (rest-api/job-finished-handler request)
+        [:post "/job-results"]      (rest-api/job-results-handler  request)
+        [:post "/job-results-html"] (rest-api/job-results-html-handler request)
+        [:post "/run-test"]         (rest-api/run-test-handler     request)
+                                    (rest-api/unknown-call-handler uri method)))
 
 (defn non-api-call-handler
     [request uri]
