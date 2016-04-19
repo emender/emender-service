@@ -99,6 +99,26 @@ Return value (example):
 
 
 
+### Get information about given job
+
+Address: http://$hostname:$port/api/v1/job-info/$job-id
+
+Method:  GET
+
+Example:
+
+    $ curl -v localhost:3000/api/v1/job-info/1
+
+Return value (job number is correct):
+
+    {"id":2,"datetime":"2016-04-19 16:16:31","job":"doc-Other-Book (test)","url":null,"branch":null,"results":"actual test results"}
+
+Return value (job number is incorrect):
+
+    {"status":"error","error":"Bad job ID","uri":"\/api\/v1\/job-info\/gfdgdfs"}
+
+
+
 ### Send information that test has been started outside the service (in Jenkins for instance)
 
 Address: http://$hostname:$port/api/v1/job-started/$job-name
