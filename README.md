@@ -49,9 +49,53 @@ Emender-service can be controlled via set of simple REST API calls. Every suppor
 
 Address: http://$hostname:$port/api/info
 
+Method:  GET
+
 Example:
 
     $ curl -v localhost:3000/api/info
+
+Return value (example):
+
+    {"toasterNotifications":["info|Api response|<strong>Emender Service<\/strong> api v1 on<\/br>$hostname"],"configuration":$configuration}
+
+
+
+### Get list of all books (ie. already tested books)
+
+Address: http://$hostname:$port/api/v1/books
+         http://$hostname:$port/api/v1/book-list
+
+Method:  GET
+
+Example:
+
+    $ curl -v localhost:3000/api/v1/books
+    $ curl -v localhost:3000/api/v1/book-list
+
+Return value (example):
+
+    ["doc-Other-Book (test)","doc-Red_Hat_Developer_Toolset-1-Release_Notes-en-US (test)"]
+
+
+
+### Get list of all test jobs
+
+Address: http://$hostname:$port/api/v1/jobs
+         http://$hostname:$port/api/v1/job-list
+
+Method:  GET
+
+Example:
+
+    $ curl -v localhost:3000/api/v1/jobs
+    $ curl -v localhost:3000/api/v1/job-list
+
+Return value (example):
+
+    [{"id":1,"job":"doc-Red_Hat_Developer_Toolset-1-Release_Notes-en-US (test)"},
+     {"id":2,"job":"doc-Other-Book (test)"},
+     {"id":3,"job":"doc-Red_Hat_Developer_Toolset-1-Release_Notes-en-US (test)"}]
 
 
 
