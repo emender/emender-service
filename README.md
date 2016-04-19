@@ -99,6 +99,38 @@ Return value (example):
 
 
 
+### Send information that test has been started outside the service (in Jenkins for instance)
+
+Address: http://$hostname:$port/api/v1/job-started/$job-name
+
+Method:  POST
+
+Example:
+
+    $ curl -X POST --header "Content-Type: application/json" -v "localhost:3000/api/v1/job-started/doc-Other-Book+(test)"
+
+Return value:
+
+    {"status":"ok"}
+
+
+
+### Send information that test has been finished outside the service (in Jenkins for instance)
+
+Address: http://$hostname:$port/api/v1/job-finished/$job-name
+
+Method:  POST
+
+Example:
+
+    $ curl -X POST --header "Content-Type: application/json" -v "localhost:3000/api/v1/job-finished/doc-Other-Book+(test)"
+
+Return value:
+
+    {"status":"ok"}
+
+
+
 ## License
 
 Copyright © 2016 Pavel Tisnovsky <ptisnovs@redhat.com>, Red Hat
