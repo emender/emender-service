@@ -96,7 +96,37 @@
         (db-interface/log-job-results job-name results)
         (println "job name" job-name)
         (println "results:" results)
-        (results/add-new-results job-name results)
+        ; not needed ATM, we don't need to use memory cache
+        ;(results/add-new-results job-name results)
+        ;(pprint/pprint results)
+        (send-response {:status :ok})))
+
+(def html-to-json-separator
+    "\n{\n")
+
+(defn get-html-and-json-part
+    [content]
+    (let [index (.indexOf content html-to-json-separator)]
+        (if index
+            {:html-part (subs content 0 (inc index))
+             :json-part (subs content (inc index))})))
+
+(defn job-results-html-handler
+    [request]
+    (let [job-name (read-job-name-from-request request)
+          results  (read-request-body request)
+          parts    (get-html-and-json-part results)
+          html-part (:html-part parts)
+          json-part (-> (:json-part parts) body->results)]
+        (db-interface/log-job-results job-name nil nil json-part html-part)
+        (println "job name" job-name)
+       ;(println "JSON" (:html-part parts))
+       ;(println "HTML" (:json-part parts))
+       ;(spit "test.all" results)
+       ;(spit "test.json" (:json-part parts))
+       ;(spit "test.html" (:html-part parts))
+        ; not needed ATM, we don't need to use memory cache
+        ;(results/add-new-results job-name results)
         ;(pprint/pprint results)
         (send-response {:status :ok})))
 
