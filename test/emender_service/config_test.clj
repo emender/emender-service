@@ -45,3 +45,18 @@
     (testing "if the emender-service.config/print-configuration definition exists."
         (is (callable? 'emender-service.config/print-configuration))))
 
+(deftest test-get-api-prefix-existence
+    "Check that the emender-service.config/get-api-prefix definition exists."
+    (testing "if the emender-service.config/get-api-prefix definition exists."
+        (is (callable? 'emender-service.config/get-api-prefix))))
+
+(deftest test-path-to-emender-existence
+    "Check that the emender-service.config/path-to-emender definition exists."
+    (testing "if the emender-service.config/path-to-emender definition exists."
+        (is (callable? 'emender-service.config/path-to-emender))))
+
+(deftest test-path-to-tests-existence
+    "Check that the emender-service.config/path-to-tests definition exists."
+    (testing "if the emender-service.config/path-to-tests definition exists."
+        (is (callable? 'emender-service.config/path-to-tests))))
+
