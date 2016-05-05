@@ -35,3 +35,13 @@
     (testing "if the emender-service.config/update-configuration definition exists."
         (is (callable? 'emender-service.config/update-configuration))))
 
+(deftest test-load-configuration-existence
+    "Check that the emender-service.config/load-configuration definition exists."
+    (testing "if the emender-service.config/load-configuration definition exists."
+        (is (callable? 'emender-service.config/load-configuration))))
+
+(deftest test-print-configuration-existence
+    "Check that the emender-service.config/print-configuration definition exists."
+    (testing "if the emender-service.config/print-configuration definition exists."
+        (is (callable? 'emender-service.config/print-configuration))))
+
