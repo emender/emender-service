@@ -75,6 +75,8 @@
                         [:tr [:td [:a {:href "/job-list"} "Job list"]]]
                         [:tr [:td [:a {:href "/book-list"} "Book list"]]]
                         [:tr [:td "&nbsp;"]]
+                        [:tr [:td [:a {:href "/manual-test"} "Start new test against selected repository"]]]
+                        [:tr [:td "&nbsp;"]]
                         [:tr [:td [:a {:href "/configuration"} "Configuration"]]]
                         [:tr [:td "&nbsp;"]]
                         [:tr [:td [:a {:href "/operation-log"} "Operation log"]]]
@@ -316,4 +318,24 @@
             [:tr [:td (key db-stat)]
                  [:td (val db-stat)]])
             ))
+
+(defn render-manual-test
+    "Render page with entries for specifying manual test"
+    []
+    (page/xhtml
+        (render-html-header)
+        [:body {:style "padding-top:70px"}
+            [:div {:class "container"}
+                (render-navigation-bar-section)
+                [:div {:class "col-md-10"}
+                    [:h2 "Start new test against selected repository"]
+                    [:table {:class "table table-striped table-condensed table-hover table-bordered"}
+                    ]
+                [:div [:a {:href "/"} "Back"]]
+                [:br][:br][:br][:br]
+                (render-html-footer)
+                ]
+            ] ; </div class="container">
+        ] ; </body>
+    ))
 

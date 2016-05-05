@@ -42,6 +42,11 @@
         (-> (http-response/response (html-renderer/render-book-list-page book-list))
             (http-response/content-type "text/html"))))
 
+(defn render-manual-test
+    [request]
+    (-> (http-response/response (html-renderer/render-manual-test))
+        (http-response/content-type "text/html")))
+
 (defn render-jobs-for-book
     [request]
     (let [book-name (-> request :params (get "book"))
@@ -171,6 +176,7 @@
         "/"                      (render-front-page     request)
         "/job-list"              (render-job-list-page  request)
         "/book-list"             (render-book-list-page request)
+        "/manual-test"           (render-manual-test    request)
         "/jobs-for-book"         (render-jobs-for-book  request)
         "/job-info"              (render-job-info       request)
         "/operation-log"         (render-operation-log  request)
