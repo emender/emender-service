@@ -11,3 +11,27 @@
     [function-name]
     (clojure.test/function? function-name))
 
+;
+; Tests for various functions
+;
+
+(deftest test-parse-int-existence
+    "Check that the emender-service.config/parse-int definition exists."
+    (testing "if the emender-service.config/parse-int definition exists."
+        (is (callable? 'emender-service.config/parse-int))))
+
+(deftest test-parse-float-existence
+    "Check that the emender-service.config/parse-float definition exists."
+    (testing "if the emender-service.config/parse-float definition exists."
+        (is (callable? 'emender-service.config/parse-float))))
+
+(deftest test-parse-boolean-existence
+    "Check that the emender-service.config/parse-boolean definition exists."
+    (testing "if the emender-service.config/parse-boolean definition exists."
+        (is (callable? 'emender-service.config/parse-boolean))))
+
+(deftest test-update-configuration-existence
+    "Check that the emender-service.config/update-configuration definition exists."
+    (testing "if the emender-service.config/update-configuration definition exists."
+        (is (callable? 'emender-service.config/update-configuration))))
+
