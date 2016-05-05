@@ -60,3 +60,23 @@
     (testing "if the emender-service.config/path-to-tests definition exists."
         (is (callable? 'emender-service.config/path-to-tests))))
 
+(deftest test-verbose?-existence
+    "Check that the emender-service.config/verbose? definition exists."
+    (testing "if the emender-service.config/verbose? definition exists."
+        (is (callable? 'emender-service.config/verbose?))))
+
+(deftest test-use-result-cache?-existence
+    "Check that the emender-service.config/use-result-cache? definition exists."
+    (testing "if the emender-service.config/use-result-cache? definition exists."
+        (is (callable? 'emender-service.config/use-result-cache?))))
+
+(deftest test-pretty-print-edn?-existence
+    "Check that the emender-service.config/pretty-print-edn? definition exists."
+    (testing "if the emender-service.config/pretty-print-edn? definition exists."
+        (is (callable? 'emender-service.config/pretty-print-edn?))))
+
+(deftest test-delete-workdirs?-existence
+    "Check that the emender-service.config/delete-workdirs? definition exists."
+    (testing "if the emender-service.config/delete-workdirs? definition exists."
+        (is (callable? 'emender-service.config/delete-workdirs?))))
+
